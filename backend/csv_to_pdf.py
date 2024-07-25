@@ -19,23 +19,25 @@ def fin_news_to_pdf(fin_news):
     width_text = int(a4_width_mm / character_width_mm)
     fontsize_mm = fontsize_pt * pt_to_mm
 
-    pdf = FPDF(orientation='P', unit='mm', format='A4')
-    pdf.set_auto_page_break(True, margin=margin_bottom_mm)
-    pdf.add_page()
+    for stock in tqdm(pd.unique(fin_news.stock), "Converting to pdfs"):
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
+        pdf.set_auto_page_break(True, margin=margin_bottom_mm)
+        pdf.add_page()
 
-    for _, row in tqdm(fin_news.iterrows(), desc=f"Converting fin_news csv to pdf doc (total: {len(fin_news)})"):
-        pdf.set_font(family='Courier', size=fontsize_pt)
+        for _, row in fin_news[fin_news["stock"] == stock].iterrows():
+            pdf.set_font(family='Courier', size=fontsize_pt)
 
-        date = str(row["date"])[:10]
-        news = f"Financial news for stock {row['stock']} dated on {date}: "
-        news += unidecode(row['title'])
+            date = str(row["date"])[:10]
+            news = f"Financial news for {stock} dated on {date}: "
+            news += unidecode(row['title'])
 
-        wrapped = textwrap.wrap(news, width_text)
-        for line in wrapped:
-            pdf.cell(0, fontsize_mm, line, ln=1)
-        pdf.cell(0, fontsize_mm, "", ln=1)  # newline
+            wrapped = textwrap.wrap(news, width_text)
+            for line in wrapped:
+                pdf.cell(0, fontsize_mm, line, ln=1)
+            pdf.cell(0, fontsize_mm, "", ln=1)  # newline
 
-    pdf.output("./pdf_outputs/fin_news.pdf", "F")
+        pdf.output(f"./pdf_outputs/{stock}_news.pdf", "F")
+
     print("fin_news pdf completed")
 
 def gen_news_to_pdf(gen_news):
@@ -69,5 +71,5 @@ def gen_news_to_pdf(gen_news):
 
 
 fin_news_to_pdf(fin_news)
-#gen_news_to_pdf(gen_news)
+gen_news_to_pdf(gen_news)
 
