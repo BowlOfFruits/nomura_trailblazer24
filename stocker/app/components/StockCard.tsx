@@ -38,12 +38,12 @@ const StockCard: React.FC<StockCardProps> = ({stock}) => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        getApi(`/api/stock/${stock.stockName}`, data => {setPrices(data)}, err => console.log(err), () => setIsLoading(false))
+        getApi(`/api/stock/${stock.stockName}`, data => {console.log(data); setPrices(data)}, err => console.log(err), () => setIsLoading(false))
     }, [])
 
     const options = {
         chart: {
-            title: `Price of ${name}`,
+            title: `Price of ${stock.stockName}`,
             subtitle: "USD",
         },
     };
@@ -73,11 +73,18 @@ const StockCard: React.FC<StockCardProps> = ({stock}) => {
     }
     
     const generateData = () => {
-        const data: any[] = [["Day", "Price"]]
-        if ("historial" in prices) {
-            data.concat(Object.entries(prices["historical"]))
+        let data: any[] = [["Day", "Price", "Prediction"]]
+        if (isLoading) {
+            return data
         }
-        console.log(data, prices);
+        const allTimestamps = prices["historical"].map(price => price[0]).concat(prices["prediction"].map(price => price[0]))
+        const length = prices["historical"].length  + prices["prediction"].length
+        const paddedHist = prices["historical"].map(x => x[1]).concat(Array(prices["prediction"].length).fill(null))
+        const paddedPred = Array(prices["historical"].length).fill(null).concat(prices["prediction"].map(x => x[1]))
+
+        for (let i = 0; i < length; i++) {
+            data.push([allTimestamps[i], paddedHist[i], paddedPred[i]])
+        }
         return data;
     }
 
@@ -86,7 +93,7 @@ const StockCard: React.FC<StockCardProps> = ({stock}) => {
             <>
                 <div>
                     <span className='p-2'><span className='font-bold'>Price bought:</span> {stock.priceBought}</span> 
-                    {/* <span className='p-2'><span className='font-bold'>Current price:</span> {stock.}</span> */}
+                    <span className='p-2'><span className='font-bold'>Current price:</span> {parseFloat(prices["current_price"]).toFixed(2)}</span>
                     <span className='p-2'><span className='font-bold'>Volume:</span> {stock.volume}</span>
                 </div>
                 <Chart

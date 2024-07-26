@@ -32,55 +32,16 @@ const pingStocker = (query: string, riskTolerance: string, investmentHorizon: st
 }
 
 const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) => void, onFinal: () => void) => {
-    console.log(url)
-
-    if (url == "/api/portfolio/cyc/stock") {
-        onData(["APPL"])
-        onFinal()
-        return
-    }
-
-    if (url == "stocker/chat") {
-        onData("Hello! This is StockerAI, your friendly neighbour trade recommender.")
-        onFinal()
-        return
-    }
-    
-    if (url == "stocker/cat") {
-        fetch("https://catfact.ninja/fact")
-            .then(response => response.json())
-            .then(data => onData(data.fact))
-            .catch(error => onError(error))
-            .finally(onFinal);
-        return
-    }
-
-    if (url == "/api/portfolio/cyc/all") {
-        onData([
-            {
-                type: "T Bonds", 
-                value: 100
-            }, 
-            {
-                type: "Stocks", 
-                value: 200
-            }, 
-            {
-                type: "Cash", 
-                value: 500
-            }
-        ]);
-        onFinal();
-        return;
-    }
 
     fetch(be_url + url, {
-        mode: 'no-cors',
-        })
-        .then(response => {console.log(response); return response.json()})
-        .then(data => onData(data))
-        .catch(error => onError(error))
-        .finally(onFinal);
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {console.log(data); onData(data)})
+    .catch(error => onError(error))
+    .finally(onFinal);
 }
 
 export {
