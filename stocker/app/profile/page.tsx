@@ -2,33 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Spin, notification, InputNumber } from 'antd';
-import { useUser } from '../context/UserContext';
 import Header from '../components/header';
 import { getApi } from '../api';
 import { profileDetails, storeDetails } from './storeDetails';
 import { secondsToHours } from 'date-fns';
+import useUserStore from '../context/userStore';
 
 const { Option } = Select;
 
 const Profile: React.FC<{}> = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [form] = Form.useForm();
-  const user = useUser();
+  const userStore = useUserStore();
 
   useEffect(() => {
     // Simulate fetch delay
     setTimeout(() => {
       // Set form fields with user details
       form.setFieldsValue({
-        name: user.userDetails.name,
-        riskTolerance: user.userDetails.riskTolerance,
-        secondsToHours: user.userDetails.sector,
-        investmentHorizon: user.userDetails.investmentHorizon,
-        textField2: user.userDetails.textField2,
+        name: userStore.user,
+        riskTolerance: userStore.riskTolerance,
+        sector: userStore.sector,
+        investmentHorizon: userStore.investmentHorizon,
       });
       setIsLoading(false);
     }, 1000);
-  }, [form, user.userDetails]);
+  }, [form]);
 
   const onFinish = (values: (data: any) => void) => {
     console.log('Form values:', values);
@@ -96,12 +95,12 @@ const Profile: React.FC<{}> = () => {
           label="Preferred Sector"
           rules={[{ required: true, message: 'Please select an option!' }]}
         >
-          <Select placeholder="Select an option" mode="multiple">
-            <Option value="Technology">Technology</Option>
-            <Option value="Healthcare">Healthcare</Option>
-            <Option value="Non Essential Consumer Discretionary">Non Essential Consumer Discretionary</Option>
-            <Option value="Essential Consumer">Essential Consumer</Option>
-            <Option value="Energy">Energy</Option>          
+        <Select placeholder="Select an option" mode="multiple">
+          <Option value="Technology">Technology</Option>
+          <Option value="Healthcare">Healthcare</Option>
+          <Option value="Non Essential Consumer Discretionary">Non Essential Consumer Discretionary</Option>
+          <Option value="Essential Consumer">Essential Consumer</Option>
+          <Option value="Energy">Energy</Option>          
         </Select>
         </Form.Item>
         <Form.Item
@@ -121,13 +120,6 @@ const Profile: React.FC<{}> = () => {
           ]}
         >
           <InputNumber min={0} max={100} style={{ width: '100%' }}/>
-        </Form.Item>
-        <Form.Item
-          name="textField2"
-          label="Text Field 2"
-          rules={[{ required: true, message: 'Please input text!' }]}
-        >
-          <Input />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
