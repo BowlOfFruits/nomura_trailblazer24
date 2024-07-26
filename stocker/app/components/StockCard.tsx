@@ -11,13 +11,19 @@ import usePortfolioStore from '../context/portfolioStore';
 
 const { Panel } = Collapse;
 
+interface PortfolioStock {
+    stockName: string,
+    volume: number, 
+    priceBought: number, 
+}  
+
 interface Price {
     value: number,
     day: Date,
 }
 
 interface StockCardProps {
-    name: string, 
+    stock: PortfolioStock, 
 }
 
 interface StockData {
@@ -27,22 +33,14 @@ interface StockData {
     historicalPrices: Price[],
 }
 
-const StockCard: React.FC<StockCardProps> = ({name}) => {
-    const [stockData, setStockData] = useState<StockData>({volume: 0, priceBought: 0, currentPrice: 0, historicalPrices: []})
+const StockCard: React.FC<StockCardProps> = ({stock}) => {
+    const [prices, setPrices] = useState({})
     const [isLoading, setIsLoading] = useState(true)
-    const portfolioStore = usePortfolioStore();
-    const userStore = useUserStore();
 
     useEffect(() => {
-        const stock = portfolioStore.stocks.find(stock => stock.stockName === name);
-        
-        getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
-
-        setStockData(stock);
-        setIsLoading(false);
-
-        
+        getApi(`/api/stock/${stock.stockName}`, data => {setPrices(data)}, err => console.log(err), () => setIsLoading(false))
     }, [])
+
     const options = {
         chart: {
             title: `Price of ${name}`,
@@ -50,14 +48,7 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
         },
     };
 
-    const generateData = () => {
-        const data: any[] = [["Day", "Price"]]
-        for (let i = 0; i < stockData.historicalPrices.length; i++) {
-            data.push([stockData.historicalPrices[i].day.toDateString(), stockData.historicalPrices[i].value])
-        }
-        return data;
-    }
-
+    
     const generateCard = (children: React.ReactNode) => {
         return (
             <Collapse
@@ -68,7 +59,7 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
                 // items={[
                 // { key: '1', label: '', children: children}]}
             >
-                <Panel header={name} key="1">
+                <Panel header={stock.stockName} key="1">
                     {children}
                 </Panel>
             </Collapse>
@@ -81,21 +72,30 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
         );
     }
     
+    const generateData = () => {
+        const data: any[] = [["Day", "Price"]]
+        if ("historial" in prices) {
+            data.concat(Object.entries(prices["historical"]))
+        }
+        console.log(data, prices);
+        return data;
+    }
+
     return (
         generateCard(
             <>
                 <div>
-                    <span className='p-2'><span className='font-bold'>Price bought:</span> {stockData.priceBought}</span> 
-                    <span className='p-2'><span className='font-bold'>Current price:</span> {stockData.currentPrice}</span>
-                    <span className='p-2'><span className='font-bold'>Volume:</span> {stockData.volume}</span>
+                    <span className='p-2'><span className='font-bold'>Price bought:</span> {stock.priceBought}</span> 
+                    {/* <span className='p-2'><span className='font-bold'>Current price:</span> {stock.}</span> */}
+                    <span className='p-2'><span className='font-bold'>Volume:</span> {stock.volume}</span>
                 </div>
-                {/* <Chart
+                <Chart
                     chartType="Line"
                     width="100%"
                     height="400px"
                     data={generateData()}
                     options={options}
-                /> */}
+                />
             </>          
         )
     );

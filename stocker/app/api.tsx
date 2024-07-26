@@ -13,6 +13,7 @@ const generateFakeHistorialData = (length: number) => {
 const pingStocker = (query: string, riskTolerance: string, investmentHorizon: string, currentPortfolio: string[], preferredSectors: string[]) => {
     return fetch(be_url + "/stocker/chat", {
         method: "POST",
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -32,16 +33,6 @@ const pingStocker = (query: string, riskTolerance: string, investmentHorizon: st
 
 const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) => void, onFinal: () => void) => {
     console.log(url)
-    if (url == "/api/stock/APPL") {
-        onData({
-            priceBought: 10, 
-            volume: 100, 
-            currentPrice: 20, 
-            historicalPrices: generateFakeHistorialData(10)
-        })
-        onFinal()
-        return 
-    } 
 
     if (url == "/api/portfolio/cyc/stock") {
         onData(["APPL"])
@@ -83,8 +74,10 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
         return;
     }
 
-    fetch(be_url + url)
-        .then(response => response.json())
+    fetch(be_url + url, {
+        mode: 'no-cors',
+        })
+        .then(response => {console.log(response); return response.json()})
         .then(data => onData(data))
         .catch(error => onError(error))
         .finally(onFinal);

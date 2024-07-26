@@ -4,6 +4,7 @@ from datetime import datetime as dt
 import pandas as pd
 import json
 
+
 def convert(json):
     res = []
     for k, v in json.items():
@@ -21,6 +22,7 @@ def get_stock_prediction(ticker):
     arima_forecast.index = pd.date_range(start=pd.to_datetime(hist["Date"].iloc[-1]), freq="D", periods=14).strftime("%Y-%m-%d")
 
     return convert(json.loads(arima_forecast.to_json()))
+
 
 def get_historical(ticker):
     stock = yf.Ticker(ticker)

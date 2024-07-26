@@ -5,8 +5,8 @@ interface UserStore {
     setUser: (user: string) => void,
     riskTolerance: string,
     setRiskTolerance: (tolerance: string) => void;
-    sector: string, 
-    setSector: (sector: string) => void,
+    sector: string[], 
+    setSector: (sector: string[]) => void,
     investmentHorizon: string, 
     setInvestmentHorizon: (horizon: string) => void, 
 }
@@ -16,8 +16,8 @@ const useUserStore = create<UserStore>((set) => ({
     setUser: (user: string) => {set((state) => ({ user: user }))},
     riskTolerance: "low", 
     setRiskTolerance: (tolerance: string) => set(() => ({riskTolerance: tolerance})),
-    sector: "Healthcare",
-    setSector: (sector: string) => set((state) => ({ sector: sector})),
+    sector: ["Healthcare"],
+    setSector: (sector: string[]) => set((state) => ({ sector: sector})),
     investmentHorizon: "long-term", 
     setInvestmentHorizon: (horizon: string) => set((state) => ({ investmentHorizon: horizon})),
 }))

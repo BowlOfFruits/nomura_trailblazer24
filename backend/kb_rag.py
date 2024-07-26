@@ -26,7 +26,12 @@ bedrock_agent_runtime = boto3.client(
     service_name="bedrock-agent-runtime",
     region_name=REGION,
 )
-bedrock_runtime = boto3.client('bedrock-runtime', region_name=REGION)
+
+bedrock_runtime = boto3.client(
+    "bedrock-runtime",
+    region_name=REGION,
+)
+
 
 def get_docs(QUERY, client_profile):
     text = f"""

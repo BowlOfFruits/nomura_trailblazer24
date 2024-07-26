@@ -8,12 +8,18 @@ import PortFolioBreakdown from "../components/PortfolioBreakdown";
 import AddPurchase from "./AddPurchase";
 import usePortfolioStore from "../context/portfolioStore";
 
+interface PortfolioStock {
+  stockName: string,
+  volume: number, 
+  priceBought: number, 
+}
+
 const Portfolio: React.FC<{}> = () => {
-  const [stocks, setStocks] = useState<string[]>([])
+  const [stocks, setStocks] = useState<PortfolioStock[]>([])
 
   const portfolioStore = usePortfolioStore();
   useEffect(() => {
-    setStocks(portfolioStore.stocks.map(stock => stock.stockName))
+    setStocks(portfolioStore.stocks)
   }, [])
 
   return (
@@ -23,7 +29,7 @@ const Portfolio: React.FC<{}> = () => {
     <Row>
       <Col span={16}>
         {
-          stocks.map(stock => <StockCard key={stock} name={stock} />)
+          stocks.map(stock => <StockCard key={stock.stockName} stock={stock} />)
         }
       </Col>
       <Col span={8}>

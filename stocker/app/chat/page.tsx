@@ -9,6 +9,7 @@ import { UserOutlined as PersonIcon } from '@ant-design/icons';
 import { Spin } from "antd";
 import { getApi, pingStocker } from '../api';
 import useUserStore from '../context/userStore';
+import usePortfolioStore from '../context/portfolioStore';
 
 export interface ChatMessageProps {
 	isLastMessage: boolean;
@@ -55,6 +56,7 @@ export interface ChatProps {
 
 const Chat = ({ user }: ChatProps) => {
 	const userStore = useUserStore();
+	const portfolioStore = usePortfolioStore();
 	const [ messages, setMessages ] = useState([
 	{
 		createdAt: new Date(), 
@@ -76,7 +78,8 @@ const Chat = ({ user }: ChatProps) => {
 			user: "StockerAI",
 			createdAt: message.createdAt,
 			getContent: new Promise((resolve, reject) => {
-				pingStocker(message.content, "low", "short", ["APPL"], ["Healthcare"]).then(data => resolve(data)).catch(err => resolve(err))
+				
+				pingStocker(message.content, userStore.riskTolerance, userStore.investmentHorizon, portfolioStore.stocks.map(stock => stock.stockName), userStore.sector).then(data => resolve(data)).catch(err => reject(err))
 			}),
 			content: "",
 		}
