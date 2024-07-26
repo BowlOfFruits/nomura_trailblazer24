@@ -8,7 +8,6 @@ const { Option } = Select;
 const AddPurchase = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const [investmentType, setInvestmentType] = useState('stock');
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -17,6 +16,7 @@ const AddPurchase = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      console.log(values);
       
       // Send data to the API
       const response = await fetch('/api/add-stock', {
@@ -50,17 +50,13 @@ const AddPurchase = () => {
     form.resetFields();
   };
 
-  const handleTypeChange = (value) => {
-    setInvestmentType(value);
-  };
-
   return (
     <div>
       <Button onClick={showModal} className='mx-1'>
         <PlusCircleOutlined />
       </Button>
       <Modal
-        title="Add New Purchase"
+        title="Add New Stock"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -72,44 +68,31 @@ const AddPurchase = () => {
           layout="vertical"
           onFinish={onFinish}
         >
-          <Form.Item
-            name="investmentType"
-            label="Investment Type"
-            rules={[{ required: true, message: 'Please select an investment type!' }]}
-          >
-            <Select placeholder="Select investment type" onChange={handleTypeChange} defaultValue="stock">
-              <Option value="stock">Stock</Option>
-              {/* <Option value="treasury">Treasury Bills</Option> */}
-            </Select>
-          </Form.Item>
+          <>
+            <Form.Item
+              name="stockName"
+              label="Stock Name"
+              rules={[{ required: true, message: 'Please enter the stock name!' }]}
+            >
+              <Input placeholder="Enter stock name" />
+            </Form.Item>
+            
+            <Form.Item
+              name="priceBought"
+              label="Purchase Stock Price"
+              rules={[{ required: true, message: 'Please enter the purchase stock price!' }]}
+            >
+              <InputNumber min={0} step={0.01} placeholder="Enter stock price" style={{ width: '100%' }} />
+            </Form.Item>
 
-          {investmentType === 'stock' && (
-            <>
-              <Form.Item
-                name="stockName"
-                label="Stock Name"
-                rules={[{ required: true, message: 'Please enter the stock name!' }]}
-              >
-                <Input placeholder="Enter stock name" />
-              </Form.Item>
-              
-              <Form.Item
-                name="priceBought"
-                label="Purchase Stock Price"
-                rules={[{ required: true, message: 'Please enter the purchase stock price!' }]}
-              >
-                <InputNumber min={0} step={0.01} placeholder="Enter stock price" style={{ width: '100%' }} />
-              </Form.Item>
-
-              <Form.Item
-                name="volume"
-                label="Purchase Volume"
-                rules={[{ required: true, message: 'Please enter the purchase volume!' }]}
-              >
-                <InputNumber min={0} step={0.01} placeholder="Enter stock volume" style={{ width: '100%' }} />
-              </Form.Item>
-            </>
-          )}
+            <Form.Item
+              name="volume"
+              label="Purchase Volume"
+              rules={[{ required: true, message: 'Please enter the purchase volume!' }]}
+            >
+              <InputNumber min={0} step={0.01} placeholder="Enter stock volume" style={{ width: '100%' }} />
+            </Form.Item>
+          </>
 
           {/* {investmentType === 'treasury' && (
             <>
