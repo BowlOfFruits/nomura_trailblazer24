@@ -1,4 +1,4 @@
-const be_url = process.env.BACKEND_API
+const be_url = "http://127.0.0.1:5000"
 
 const generateFakeHistorialData = (length: number) => {
     const data = []
@@ -10,9 +10,29 @@ const generateFakeHistorialData = (length: number) => {
     return data
 }
 
+const pingStocker = (query: string, riskTolerance: string, investmentHorizon: string, currentPortfolio: string[], preferredSectors: string[]) => {
+    return fetch(be_url + "/stocker/chat", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            client_data: {
+                risk_tolerance: riskTolerance, 
+                investment_horizon: investmentHorizon,
+                current_portfolio: currentPortfolio,
+                preferred_sectors: preferredSectors
+            }, 
+            query: query
+        })
+    })
+    .then(response => response.json())
+    .then(response => response.message)
+}
+
 const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) => void, onFinal: () => void) => {
     console.log(url)
-    if (url == "/api/stock/cyc/APPL") {
+    if (url == "/api/stock/APPL") {
         onData({
             companyName: "Apple", 
             priceBought: 10, 
@@ -72,5 +92,6 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
 }
 
 export {
-    getApi
+    getApi,
+    pingStocker
 }

@@ -20,7 +20,8 @@ function ChatFooter({ roomCode, loggedInUser, addNewMessage }: ChatFooterProps) 
 			const message: MessagePopulated = {
 				createdAt: new Date(), 
 				user: loggedInUser,
-				getContent: new Promise((resolve, reject) => resolve(input))
+				getContent: new Promise((resolve, reject) => resolve(input)),
+				content: input,
 			}
 			setInput('');
 			addNewMessage(message)

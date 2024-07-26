@@ -8,7 +8,7 @@ export interface User {
 }
 
 export interface MessagePopulated {
-	// content: string;
+	content: string;
 	user: string;
 	createdAt: Date;
 	getContent: Promise<string>;

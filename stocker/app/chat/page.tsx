@@ -7,7 +7,7 @@ import ChatHeader from './components/ChatHeader';
 import ChatFooter from './components/ChatFooter';
 import { UserOutlined as PersonIcon } from '@ant-design/icons';
 import { Spin } from "antd";
-import { getApi } from '../api';
+import { getApi, pingStocker } from '../api';
 import useUserStore from '../context/userStore';
 
 export interface ChatMessageProps {
@@ -76,8 +76,9 @@ const Chat = ({ user }: ChatProps) => {
 			user: "StockerAI",
 			createdAt: message.createdAt,
 			getContent: new Promise((resolve, reject) => {
-				getApi("stocker/cat", (data) => resolve(data), err => reject(err), () => {})
-			})
+				pingStocker(message.content, "low", "short", ["APPL"], ["Healthcare"]).then(data => resolve(data)).catch(err => resolve(err))
+			}),
+			content: "",
 		}
 		newMessages.push(message)
 		newMessages.push(msgFromStocker)

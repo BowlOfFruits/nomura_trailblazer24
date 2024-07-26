@@ -7,10 +7,10 @@ MODEL = "anthropic.claude-3-haiku-20240307-v1:0"
 
 # From the frontend client profile settings
 client_profile = {
-    'risk_tolerance': 'low',
-    'preferred_sectors': ['technology', 'healthcare'],
-    'investment_horizon': 'long-term',
-    'current_portfolio': ['AAPL', 'AMZN', 'TSLA']
+    "risk_tolerance": "low",
+    "preferred_sectors": ["technology", "healthcare"],
+    "investment_horizon": "long-term",
+    "current_portfolio": ["AAPL", "AMZN", "TSLA"],
 }
 
 # User input from the chatbot
@@ -43,20 +43,22 @@ def get_docs(QUERY, client_profile):
         knowledgeBaseId=KB_ID,
         retrievalQuery={"text": text},
         retrievalConfiguration={
-            "vectorSearchConfiguration": {"numberOfResults": NUM_RESULTS,
-                                          "overrideSearchType": "HYBRID"}
+            "vectorSearchConfiguration": {
+                "numberOfResults": NUM_RESULTS,
+                "overrideSearchType": "HYBRID",
+            }
         },
     )
 
     return docs_only_response
+
 
 def get_llm_response(QUERY, client_profile):
     docs_only_response = get_docs(QUERY, client_profile)
 
     contexts = []
     for retrievedResult in docs_only_response["retrievalResults"]:
-        contexts.append(retrievedResult['content']['text'])
-
+        contexts.append(retrievedResult["content"]["text"])
 
     prompt = f"""
     Human: You are a financial advisor, and provides answers to questions by using fact based and statistical information when possible. 
@@ -83,16 +85,10 @@ def get_llm_response(QUERY, client_profile):
     Assistant:"""
 
     # model paramters
-    llama2_payload = json.dumps({
-        "prompt": prompt,
-        "temperature": 0.5,
-        "top_p": 0.5
-    })
+    llama2_payload = json.dumps({"prompt": prompt, "temperature": 0.5, "top_p": 0.5})
 
-    modelId = 'meta.llama3-70b-instruct-v1:0' # change this to use a different version from the model provider
+    modelId = "meta.llama3-70b-instruct-v1:0"  # change this to use a different version from the model provider
     response = bedrock_runtime.invoke_model(body=llama2_payload, modelId=modelId)
-    response_body = json.loads(response.get('body').read())
+    response_body = json.loads(response.get("body").read())
 
-    return response_body['generation']
-
-print(get_llm_response(QUERY, client_profile))
+    return response_body["generation"]
