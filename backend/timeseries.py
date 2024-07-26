@@ -10,8 +10,14 @@ def get_stock_prediction(ticker):
     arima_forecast = arima.forecast(steps=30)
     return arima_forecast
 
-# aapl = yf.Ticker("AAPL")
-# hist = aapl.history(period="5y")["Close"].reset_index()
+
+def get_historical(ticker):
+    stock = yf.Ticker(ticker)
+    hist = stock.history(period="1m")["Close"].reset_index()
+    return hist
+
+
+
 
 # arima = ARIMA(hist["Close"], order=(1, 2, 1), seasonal_order=(1, 2, 1, 12)).fit()
 # arima_forecast = arima.forecast(steps=30)
