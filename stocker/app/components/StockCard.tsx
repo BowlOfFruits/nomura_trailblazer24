@@ -7,6 +7,8 @@ import { Spin } from 'antd';
 import { getApi } from '../api';
 import { Collapse } from 'antd';
 
+const { Panel } = Collapse;
+
 interface Price {
     value: number,
     day: Date,
@@ -48,10 +50,19 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
 
     const generateCard = (children: React.ReactNode) => {
         return (
-            <Card title={name} bordered={false} className='w-full'>
-                {children}
-            </Card>
-        )
+            <Collapse
+                className='my-3 bg-white'
+                bordered={false}
+                // ghost
+                // defaultActiveKey={['1']}
+                // items={[
+                // { key: '1', label: '', children: children}]}
+            >
+                <Panel header={name} key="1">
+                    {children}
+                </Panel>
+            </Collapse>
+        );
     }
     
     if (isLoading) {
@@ -69,21 +80,12 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
                     <span className='p-2'><span className='font-bold'>Current price:</span> {stockData.currentPrice}</span>
                     <span className='p-2'><span className='font-bold'>Volume:</span> {stockData.volume}</span>
                 </div>
-                <Collapse
-                    className='my-3'
-                    bordered={false}
-                    ghost
-                    defaultActiveKey={['1']}
-                    items={[
-                    { key: '1', label: '', children: 
-                        <Chart
-                            chartType="Line"
-                            width="100%"
-                            height="400px"
-                            data={generateData()}
-                            options={options}
-                        />
-                    }]}
+                <Chart
+                    chartType="Line"
+                    width="100%"
+                    height="400px"
+                    data={generateData()}
+                    options={options}
                 />
             </>          
         )

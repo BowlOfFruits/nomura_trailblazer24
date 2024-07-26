@@ -1,3 +1,8 @@
+export interface PortfolioComponent {
+	type: string; 
+	value: number;
+}
+
 export interface User {
 	username: string;
 	firstName?: string;

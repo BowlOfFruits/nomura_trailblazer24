@@ -23,7 +23,7 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
         return 
     } 
 
-    if (url == "/api/portfolio/cyc") {
+    if (url == "/api/portfolio/cyc/stock") {
         onData(["APPL"])
         onFinal()
         return
@@ -42,6 +42,25 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
             .catch(error => onError(error))
             .finally(onFinal);
         return
+    }
+
+    if (url == "/api/portfolio/cyc/all") {
+        onData([
+            {
+                type: "T Bonds", 
+                value: 100
+            }, 
+            {
+                type: "Stocks", 
+                value: 200
+            }, 
+            {
+                type: "Cash", 
+                value: 500
+            }
+        ]);
+        onFinal();
+        return;
     }
 
     fetch(be_url + url)

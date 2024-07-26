@@ -3,18 +3,18 @@
 import react, { useEffect, useState } from "react"
 import StockCard from "../components/StockCard";
 import { getApi } from "../api";
-import { Spin } from "antd";
+import { Col, Row, Spin } from "antd";
 import { useUser } from "../context/UserContext";
+import PortFolioBreakdown from "../components/PortfolioBreakdown";
 
 const Portfolio: React.FC<{}> = () => {
   const [stocks, setStocks] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   const user = useUser();
-  console.log(user.userDetails)
 
   useEffect(() => {
-    getApi("/api/portfolio/cyc", data => {setStocks(data)}, err => console.log(err), () => setIsLoading(false))
+    getApi("/api/portfolio/cyc/stock", data => {setStocks(data)}, err => console.log(err), () => setIsLoading(false))
   }, [])
 
   if (isLoading) {
@@ -23,9 +23,14 @@ const Portfolio: React.FC<{}> = () => {
 
   return (
     <>
-    {
-      stocks.map(stock => <StockCard key={stock} name={stock} />)
-    }
+    <Row>
+      <Col span={16}>
+        {
+          stocks.map(stock => <StockCard key={stock} name={stock} />)
+        }
+      </Col>
+      <Col span={8}><PortFolioBreakdown/></Col>
+    </Row>
     </>
   );
 };

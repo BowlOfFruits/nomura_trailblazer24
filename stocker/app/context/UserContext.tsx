@@ -7,7 +7,7 @@ export type UserContextType = {
 };
 
 export const UserContext = createContext<UserContextType>({
-	userDetails: "John Doe",
+	userDetails: "cyc",
 	setUserDetails: () => {}
 });
 export const useUser = () => useContext(UserContext);
