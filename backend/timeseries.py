@@ -17,8 +17,8 @@ def get_stock_prediction(ticker):
     hist["Date"] = hist["Date"].apply(lambda x: dt.strftime(x, "%Y-%m-%d"))
 
     arima = ARIMA(hist["Close"], order=(1, 2, 1), seasonal_order=(1, 2, 1, 12)).fit()
-    arima_forecast = arima.forecast(steps=30)
-    arima_forecast.index = pd.date_range(start=pd.to_datetime(hist["Date"].iloc[-1]), freq="D", periods=31, inclusive="right").strftime("%Y-%m-%d")
+    arima_forecast = arima.forecast(steps=14)
+    arima_forecast.index = pd.date_range(start=pd.to_datetime(hist["Date"].iloc[-1]), freq="D", periods=14).strftime("%Y-%m-%d")
 
     return convert(json.loads(arima_forecast.to_json()))
 
@@ -32,5 +32,5 @@ def get_historical(ticker):
 
     return convert(json.loads(hist2.to_json()))
 
-#print(get_stock_prediction("AAPL"))
+print(get_stock_prediction("AAPL"))
 #print(get_historical("AAPL"))
