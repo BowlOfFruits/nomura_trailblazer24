@@ -24,7 +24,8 @@ const Header: React.FC<{}> = () => {
         items={items}
         style={{ flex: 1, minWidth: 0 }}
         />
-        <Avatar icon={<UserOutlined />} />
+        <Avatar icon={<UserOutlined />} onClick={() => router.push('/profile')} style={{ cursor: 'pointer'}} />
+        
     </AntdHeader>
     );
   };
