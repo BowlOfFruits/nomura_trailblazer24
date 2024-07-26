@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, Spin, notification, InputNumber } from 'antd';
-import Header from '../components/header';
 import { getApi } from '../api';
-import { profileDetails, storeDetails } from './storeDetails';
-import { secondsToHours } from 'date-fns';
 import useUserStore from '../context/userStore';
+
 
 const { Option } = Select;
 
@@ -32,11 +30,10 @@ const Profile: React.FC = () => {
   const onFinish = (values: any) => {
     console.log('Form values:', values);
 
-    // Store in context
-    storeProfileDetails('name', values.name);
-    storeProfileDetails('sector', values.sector);
-    storeProfileDetails('riskTolerance', values.riskTolerance);
-    storeProfileDetails('investmentHorizon', values.investmentHorizon);
+    // Store in Zustand
+    userStore.setRiskTolerance(values.riskTolerance);
+    userStore.setSector(values.sector);
+    userStore.setInvestmentHorizon(values.investmentHorizon);
 
     // Display success notification
     notification.success({
@@ -56,19 +53,12 @@ const Profile: React.FC = () => {
       name="profile"
       layout="vertical"
       onFinish={onFinish}
-      onValuesChange={(changedValues) => {
-        // Update the context state as values change
-        Object.entries(changedValues).forEach(([key, value]) => {
-          storeProfileDetails(key as keyof typeof profileDetails, value);
-        });
-      }}
     >
       <Form.Item
         name="name"
         label="Name"
-        rules={[{ required: true, message: 'Please input your name!' }]}
       >
-        <Input />
+        <Input disabled/>
       </Form.Item>
       <Form.Item
         name="riskTolerance"
@@ -97,21 +87,13 @@ const Profile: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="investmentHorizon"
-        label="Investment Horizon (in years)"
-        rules={[
-          { 
-            required: true, 
-            message: 'Please input a valid number!' 
-          },
-          {
-            type: 'number',
-            min: 0,
-            max: 100,
-            message: 'Investment horizon must be between 0 and 100 years!'
-          }
-        ]}
+        label="Investment Horizon"
+        rules={[{ required: true, message: 'Please select an option!' }]}
       >
-        <InputNumber min={0} max={100} style={{ width: '100%' }}/>
+        <Select placeholder="Select an option" >
+          <Option value="short-term">Short</Option>
+          <Option value="long-term">Long</Option>
+        </Select>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
