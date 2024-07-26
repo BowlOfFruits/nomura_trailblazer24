@@ -13,12 +13,12 @@ client_profile = {
 }
 
 QUERY = f"""
-I have these following stocks: AAPL, AMZN and TSLA. 
+I have these following stocks: {', '.join(client_profile['current_portfolio'])}. 
+
 My profile is:
 Risk Tolerance: {client_profile['risk_tolerance']}
 Preferred Sectors: {', '.join(client_profile['preferred_sectors'])}
 Investment Horizon: {client_profile['investment_horizon']}
-Current Portfolio: {', '.join(client_profile['current_portfolio'])}
 
 Based on their news and my profile, recommend if I should buy, sell or hold each stocks?
 Also recommend other stocks that can help to diversify my portfolio according to my profile and summarise their news.
