@@ -10,7 +10,8 @@ CORS(app)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
-    
+
+
 @app.route("/stocker/chat", methods=["POST"])
 def handle_query_chat():
     if request.is_json:
@@ -27,26 +28,23 @@ def handle_query_chat():
     else:
         response = {"status": "fail", "message": "Request body must be JSON"}
         return jsonify(response), 400
-    
-@app.route("/api/stock/", methods=["GET"])
-def handle_query():
-    ticker = request.get_json('ticker', None)
+
+
+@app.route("/api/stock/<ticker>", methods=["GET"])
+def handle_query(ticker):
+    print(ticker)
     if ticker:
         prediction = get_stock_prediction(ticker)
         historical = get_historical(ticker)
-        current_price = historical[-1]
+        print(historical)
 
         # Create a response
         response = {
             "status": "success",
             "prediction": prediction,
             "historical": historical,
-            "cur": current_price
         }
         return jsonify(response), 200
     else:
-        response = {
-            "status": "fail",
-            "message": "Request body must be JSON"
-        }
+        response = {"status": "fail", "message": "Request body must be JSON"}
         return jsonify(response), 400
