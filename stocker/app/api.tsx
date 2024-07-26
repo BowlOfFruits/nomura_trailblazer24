@@ -34,7 +34,6 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
     console.log(url)
     if (url == "/api/stock/APPL") {
         onData({
-            companyName: "Apple", 
             priceBought: 10, 
             volume: 100, 
             currentPrice: 20, 

@@ -21,7 +21,6 @@ interface StockCardProps {
 }
 
 interface StockData {
-    companyName: string,
     volume: number, 
     priceBought: number, 
     currentPrice: number, 
@@ -29,16 +28,20 @@ interface StockData {
 }
 
 const StockCard: React.FC<StockCardProps> = ({name}) => {
-    const [stockData, setStockData] = useState<StockData>({companyName: "", volume: 0, priceBought: 0, currentPrice: 0, historicalPrices: []})
+    const [stockData, setStockData] = useState<StockData>({volume: 0, priceBought: 0, currentPrice: 0, historicalPrices: []})
     const [isLoading, setIsLoading] = useState(true)
     const portfolioStore = usePortfolioStore();
     const userStore = useUserStore();
 
     useEffect(() => {
         const stock = portfolioStore.stocks.find(stock => stock.stockName === name);
+        
+        getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
+
         setStockData(stock);
         setIsLoading(false);
-        // getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
+
+        
     }, [])
     const options = {
         chart: {
@@ -82,7 +85,6 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
         generateCard(
             <>
                 <div>
-                    <span className='p-2'><span className='font-bold'>Company:</span> {stockData.companyName}</span>
                     <span className='p-2'><span className='font-bold'>Price bought:</span> {stockData.priceBought}</span> 
                     <span className='p-2'><span className='font-bold'>Current price:</span> {stockData.currentPrice}</span>
                     <span className='p-2'><span className='font-bold'>Volume:</span> {stockData.volume}</span>
