@@ -239,3 +239,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 chat-frontend/** */
+
+#enviroment variables
+.env
