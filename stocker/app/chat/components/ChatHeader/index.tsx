@@ -11,7 +11,7 @@ function ChatHeader({ messages }: ChatHeaderProps) {
 	return (
 		<div className="chat__header">
 			<div className="chat__headerInfo">
-				<h3>Stocker</h3>
+				<h3>StockerAI</h3>
 			</div>
 			<div className="chat__headerIcons">
 			</div>

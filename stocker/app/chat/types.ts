@@ -5,14 +5,11 @@ export interface PortfolioComponent {
 
 export interface User {
 	username: string;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
 }
 
 export interface MessagePopulated {
 	// content: string;
-	user: User;
+	user: string;
 	createdAt: Date;
 	getContent: Promise<string>;
 }

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import { PortfolioComponent } from '../chat/types';
 import { getApi } from '../api';
-import { useUser } from '../context/UserContext';
+import useUserStore from '../context/userStore';
 
 const PieChartWithClick = () => {
     const [data, setData] = useState<PortfolioComponent[]>([]);
-    const user = useUser();
+    const userStore = useUserStore();
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        getApi(`/api/portfolio/${user.userDetails}/all`, 
+        getApi(`/api/portfolio/${userStore.user}/all`, 
             data => {setData(data)}, 
             err => console.log(err), 
             () => setIsLoading(false)

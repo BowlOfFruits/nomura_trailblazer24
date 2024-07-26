@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './style.css';
 import { MessagePopulated } from './types';
-import { useUser } from '../context/UserContext';
 import ChatHeader from './components/ChatHeader';
 import ChatFooter from './components/ChatFooter';
 import { UserOutlined as PersonIcon } from '@ant-design/icons';
 import { Spin } from "antd";
 import { getApi } from '../api';
+import useUserStore from '../context/userStore';
 
 export interface ChatMessageProps {
 	isLastMessage: boolean;
@@ -16,9 +16,9 @@ export interface ChatMessageProps {
 }
 
 const ChatMessage = ({isLastMessage, message}: ChatMessageProps) => {
-	const { userDetails } = useUser();
 	const [isLoading, setIsLoading] = useState(true);
-	const [content, setContent] = useState("")
+	const [content, setContent] = useState("");
+	const userStore = useUserStore();
 
 	useEffect(() => {
 		message.getContent.then((msg) => {
@@ -32,19 +32,16 @@ const ChatMessage = ({isLastMessage, message}: ChatMessageProps) => {
 
 	return (
 		<div
-		className={`chat__block ${userDetails.username === user.username &&
-			'chat__block--sender'} ${user.username === 'Chatbot' && 'chat__block--bot'}`}
-	>
+		className={`chat__block ${userStore.user === user &&
+			'chat__block--sender'} ${user === 'StockerAI' && 'chat__block--bot'}`}
+		>
 		<div className="message__block">
-			{user.firstName && user.lastName ? (
+			{/* {user.firstName && user.lastName ? (
 				user.firstName.charAt(0) + user.lastName.charAt(0)
 			) : (
 				<PersonIcon />
-			)}
+			)} */}
 			<div className="chat__message">
-				<span className="header__text chat__person">
-					{userDetails.username === user.username ? 'You' : user.username}
-				</span>
 				{
 					isLoading 
 						? <Spin />
@@ -62,13 +59,13 @@ export interface ChatProps {
 }
 
 const Chat = ({ user }: ChatProps) => {
-	const { userDetails } = useUser();
+	const userStore = useUserStore();
 	const [ messages, setMessages ] = useState([
 	{
 		createdAt: new Date(), 
-		user: { username: "Stocker"},
+		user: "StockerAI",
 		getContent: new Promise((resolve, reject) => 
-			resolve("Hello! This is Stocker, your friendly neighbour trade recommender."))
+			resolve("Hello! This is StockerAI, your friendly neighbour trade recommender."))
 	}
 	] as MessagePopulated[]);
 
@@ -81,7 +78,7 @@ const Chat = ({ user }: ChatProps) => {
 	const userAddNewMessage = (message: MessagePopulated) => {
 		const newMessages = [...messages]
 		const msgFromStocker: MessagePopulated = {
-			user: { username: "Stocker"},
+			user: "StockerAI",
 			createdAt: message.createdAt,
 			getContent: new Promise((resolve, reject) => {
 				getApi("stocker/cat", (data) => resolve(data), err => reject(err), () => {})
@@ -107,7 +104,7 @@ const Chat = ({ user }: ChatProps) => {
 					})}
 				</div>
 			</div>
-			<ChatFooter roomCode={user} loggedInUser={userDetails} addNewMessage={userAddNewMessage}/>
+			<ChatFooter roomCode={user} loggedInUser={userStore.user} addNewMessage={userAddNewMessage}/>
 		</div>
 	);
 };

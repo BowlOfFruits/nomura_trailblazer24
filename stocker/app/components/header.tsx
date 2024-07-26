@@ -12,7 +12,7 @@ const Header: React.FC<{}> = () => {
 
     const items = [
         {key: 0, label: (<Link style={{color: "white"}} onClick={() => router.push("/portfolio")}>Portfolio</Link>)}, 
-        {key: 1, label: (<Link style={{color: "white"}} onClick={() => router.push("/chat")}>Stocker</Link>)}
+        {key: 1, label: (<Link style={{color: "white"}} onClick={() => router.push("/chat")}>StockerAI</Link>)}
     ]
 
     return (

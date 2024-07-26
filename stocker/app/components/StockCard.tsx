@@ -6,6 +6,7 @@ import { Chart } from "react-google-charts";
 import { Spin } from 'antd';
 import { getApi } from '../api';
 import { Collapse } from 'antd';
+import useUserStore from '../context/userStore';
 
 const { Panel } = Collapse;
 
@@ -30,8 +31,10 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
     const [stockData, setStockData] = useState<StockData>({companyName: "", volume: 0, priceBought: 0, currentPrice: 0, historicalPrices: []})
     const [isLoading, setIsLoading] = useState(true)
 
+    const userStore = useUserStore();
+
     useEffect(() => {
-        getApi("/api/stock/cyc/APPL", data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
+        getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
     }, [])
     const options = {
         chart: {

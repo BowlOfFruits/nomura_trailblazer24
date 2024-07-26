@@ -25,7 +25,7 @@ export default function RootLayout({
       <Layout>
         <div
           style={{
-            minHeight: 280,
+            minHeight: "90vh",
           }}
         >
           {children}

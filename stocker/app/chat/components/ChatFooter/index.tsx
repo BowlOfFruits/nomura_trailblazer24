@@ -35,7 +35,7 @@ function ChatFooter({ roomCode, loggedInUser, addNewMessage }: ChatFooterProps) 
 					Send
 				</button>
 			</form>
-			<Button onClick={sendMessage}>
+			<Button onClick={sendMessage} className="mx-2">
 				<SendOutlined />
 			</Button>
 		</div>

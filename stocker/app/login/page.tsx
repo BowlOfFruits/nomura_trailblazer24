@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Form, Input, Button, Typography, Space } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import "./style.css"
-import { useUser } from '../context/UserContext';
+import useUserStore from '../context/userStore';
 
 const { Title } = Typography;
 
 const LoginPage = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const user = useUser();
+  const userStore = useUserStore();
 
   const onFinish = async (values: { username: string; password: string }) => {
     // Example: Perform client-side validation
@@ -20,8 +20,7 @@ const LoginPage = () => {
       setError('Please fill in all fields');
       return;
     }
-
-    user.setUserDetails(values.username)
+    userStore.setUser(values.username)
     router.push("/portfolio")
   };
 

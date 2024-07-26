@@ -11,6 +11,7 @@ const generateFakeHistorialData = (length: number) => {
 }
 
 const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) => void, onFinal: () => void) => {
+    console.log(url)
     if (url == "/api/stock/cyc/APPL") {
         onData({
             companyName: "Apple", 
@@ -30,7 +31,7 @@ const getApi = (url: string, onData: (data: any) => void, onError: (err: Error) 
     }
 
     if (url == "stocker/chat") {
-        onData("Hello! This is Stocker, your friendly neighbour trade recommender.")
+        onData("Hello! This is StockerAI, your friendly neighbour trade recommender.")
         onFinal()
         return
     }
