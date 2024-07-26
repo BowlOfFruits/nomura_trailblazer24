@@ -2,19 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import { PortfolioComponent } from '../chat/types';
 import { getApi } from '../api';
-import useUserStore from '../context/userStore';
+import usePortfolioStore from '../context/portfolioStore';
 
 const PieChartWithClick = () => {
     const [data, setData] = useState<PortfolioComponent[]>([]);
-    const userStore = useUserStore();
+    const portfolioStore = usePortfolioStore();
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        getApi(`/api/portfolio/${userStore.user}/all`, 
-            data => {setData(data)}, 
-            err => console.log(err), 
-            () => setIsLoading(false)
-        )
+        const stocks = portfolioStore.stocks.map(stock => ({
+            type: stock.stockName, // Set the type to the stock name
+            value: stock.volume * stock.priceBought // Calculate and set the value
+        }));
+
+        setData(stocks); // Set the data to the stocks from the store
+        setIsLoading(false); // Mark loading as complete
+
     }, [])
 
     const generateOptions = () => {
