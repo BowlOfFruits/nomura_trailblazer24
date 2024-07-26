@@ -7,6 +7,7 @@ import { Spin } from 'antd';
 import { getApi } from '../api';
 import { Collapse } from 'antd';
 import useUserStore from '../context/userStore';
+import usePortfolioStore from '../context/portfolioStore';
 
 const { Panel } = Collapse;
 
@@ -30,11 +31,14 @@ interface StockData {
 const StockCard: React.FC<StockCardProps> = ({name}) => {
     const [stockData, setStockData] = useState<StockData>({companyName: "", volume: 0, priceBought: 0, currentPrice: 0, historicalPrices: []})
     const [isLoading, setIsLoading] = useState(true)
-
+    const portfolioStore = usePortfolioStore();
     const userStore = useUserStore();
 
     useEffect(() => {
-        getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
+        const stock = portfolioStore.stocks.find(stock => stock.stockName === name);
+        setStockData(stock);
+        setIsLoading(false);
+        // getApi(`/api/stock/${userStore.user}/${name}`, data => {setStockData(data)}, err => console.log(err), () => setIsLoading(false))
     }, [])
     const options = {
         chart: {
@@ -83,13 +87,13 @@ const StockCard: React.FC<StockCardProps> = ({name}) => {
                     <span className='p-2'><span className='font-bold'>Current price:</span> {stockData.currentPrice}</span>
                     <span className='p-2'><span className='font-bold'>Volume:</span> {stockData.volume}</span>
                 </div>
-                <Chart
+                {/* <Chart
                     chartType="Line"
                     width="100%"
                     height="400px"
                     data={generateData()}
                     options={options}
-                />
+                /> */}
             </>          
         )
     );
