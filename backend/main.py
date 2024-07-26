@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from kb_rag import get_llm_response
 from flask_cors import CORS
 from timeseries import get_stock_prediction, get_historical
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -32,17 +33,19 @@ def handle_query_chat():
 
 @app.route("/api/stock/<ticker>", methods=["GET"])
 def handle_query(ticker):
-    print(ticker)
+    #print(ticker)
     if ticker:
         prediction = get_stock_prediction(ticker)
         historical = get_historical(ticker)
-        print(historical)
+        current_price = historical[-1][-1]
+        #print(historical)
 
         # Create a response
         response = {
             "status": "success",
             "prediction": prediction,
             "historical": historical,
+            "current_price": current_price
         }
         return jsonify(response), 200
     else:
