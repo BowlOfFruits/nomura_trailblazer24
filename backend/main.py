@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request
-
+from kb_rag import get_llm_response
 
 app = Flask(__name__)
 
