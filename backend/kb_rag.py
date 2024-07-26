@@ -5,6 +5,7 @@ KB_ID = "6R8TDE7AER"
 REGION = "us-east-1"
 MODEL = "anthropic.claude-3-haiku-20240307-v1:0"
 
+# From the frontend client profile settings
 client_profile = {
     'risk_tolerance': 'low',
     'preferred_sectors': ['technology', 'healthcare'],
@@ -12,14 +13,8 @@ client_profile = {
     'current_portfolio': ['AAPL', 'AMZN', 'TSLA']
 }
 
+# User input from the chatbot
 QUERY = f"""
-I have these following stocks: {', '.join(client_profile['current_portfolio'])}. 
-
-My profile is:
-Risk Tolerance: {client_profile['risk_tolerance']}
-Preferred Sectors: {', '.join(client_profile['preferred_sectors'])}
-Investment Horizon: {client_profile['investment_horizon']}
-
 Based on their news and my profile, recommend if I should buy, sell or hold each stocks?
 Also recommend other stocks that can help to diversify my portfolio according to my profile and summarise their news.
 """
@@ -33,20 +28,30 @@ bedrock_agent_runtime = boto3.client(
 )
 bedrock_runtime = boto3.client('bedrock-runtime', region_name=REGION)
 
-def get_docs(QUERY):
+def get_docs(QUERY, client_profile):
+    text = f"""
+    I have these following stocks: {', '.join(client_profile['current_portfolio'])}. 
+
+    My profile is:
+    Risk Tolerance: {client_profile['risk_tolerance']}
+    Preferred Sectors: {', '.join(client_profile['preferred_sectors'])}
+    Investment Horizon: {client_profile['investment_horizon']}
+    
+    {QUERY}
+    """
     docs_only_response = bedrock_agent_runtime.retrieve(
         knowledgeBaseId=KB_ID,
-        retrievalQuery={"text": QUERY},
+        retrievalQuery={"text": text},
         retrievalConfiguration={
             "vectorSearchConfiguration": {"numberOfResults": NUM_RESULTS,
-                                      "overrideSearchType": "HYBRID"}
+                                          "overrideSearchType": "HYBRID"}
         },
     )
 
     return docs_only_response
 
-def get_llm_response(QUERY):
-    docs_only_response = get_docs(QUERY)
+def get_llm_response(QUERY, client_profile):
+    docs_only_response = get_docs(QUERY, client_profile)
 
     contexts = []
     for retrievedResult in docs_only_response["retrievalResults"]:
@@ -63,6 +68,13 @@ def get_llm_response(QUERY):
     </context>
     
     <question>
+    I have these following stocks: {', '.join(client_profile['current_portfolio'])}. 
+
+    My profile is:
+    Risk Tolerance: {client_profile['risk_tolerance']}
+    Preferred Sectors: {', '.join(client_profile['preferred_sectors'])}
+    Investment Horizon: {client_profile['investment_horizon']}
+    
     {QUERY}
     </question>
     
@@ -80,7 +92,7 @@ def get_llm_response(QUERY):
     modelId = 'meta.llama3-70b-instruct-v1:0' # change this to use a different version from the model provider
     response = bedrock_runtime.invoke_model(body=llama2_payload, modelId=modelId)
     response_body = json.loads(response.get('body').read())
-    
+
     return response_body['generation']
 
-get_llm_response(QUERY)
+print(get_llm_response(QUERY, client_profile))
