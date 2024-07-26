@@ -5,10 +5,25 @@ KB_ID = "6R8TDE7AER"
 REGION = "us-east-1"
 MODEL = "anthropic.claude-3-haiku-20240307-v1:0"
 
-QUERY = """
-I have these following stocks: AAPL, NVDA and TSLA. Can you summarise their news and recommend if I should buy, sell or hold each stocks?
+client_profile = {
+    'risk_tolerance': 'low',
+    'preferred_sectors': ['technology', 'healthcare'],
+    'investment_horizon': 'long-term',
+    'current_portfolio': ['AAPL', 'AMZN', 'TSLA']
+}
 
+QUERY = f"""
+I have these following stocks: AAPL, AMZN and TSLA. 
+My profile is:
+Risk Tolerance: {client_profile['risk_tolerance']}
+Preferred Sectors: {', '.join(client_profile['preferred_sectors'])}
+Investment Horizon: {client_profile['investment_horizon']}
+Current Portfolio: {', '.join(client_profile['current_portfolio'])}
+
+Based on their news and my profile, recommend if I should buy, sell or hold each stocks?
+Also recommend other stocks that can help to diversify my portfolio according to my profile and summarise their news.
 """
+
 NUM_RESULTS = 20
 
 # Setup bedrock
@@ -27,26 +42,6 @@ docs_only_response = bedrock_agent_runtime.retrieve(
     },
 )
 
-'''
-for doc in docs_only_response["retrievalResults"]:
-    print(f"Citation:{doc}")
-
-
-text_response = bedrock_agent_runtime.retrieve_and_generate(
-    input={"text": QUERY},
-    retrieveAndGenerateConfiguration={
-        "type": "KNOWLEDGE_BASE",
-        "knowledgeBaseConfiguration": {
-            "knowledgeBaseId": KB_ID,
-            "modelArn": MODEL,
-        },
-    },
-)
-# for citation in text_response["citations"]:
-#     print(f"Citation:\n{citation}\n")
-print(f"\nOutput:\n{text_response['output']['text']}\n")
-'''
-
 contexts = []
 for retrievedResult in docs_only_response["retrievalResults"]:
     contexts.append(retrievedResult['content']['text'])
@@ -54,7 +49,7 @@ for retrievedResult in docs_only_response["retrievalResults"]:
 #print(contexts)
 
 prompt = f"""
-Human: You are a financial advisor AI system, and provides answers to questions by using fact based and statistical information when possible. 
+Human: You are a financial advisor, and provides answers to questions by using fact based and statistical information when possible. 
 Use the following pieces of information to provide an answer to the question enclosed in <question> tags. 
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
@@ -79,11 +74,6 @@ llama2_payload = json.dumps({
 })
 
 modelId = 'meta.llama3-70b-instruct-v1:0' # change this to use a different version from the model provider
-#accept = 'application/json'
-#contentType = 'application/json'
 response = bedrock_runtime.invoke_model(body=llama2_payload, modelId=modelId)
 response_body = json.loads(response.get('body').read())
 print(response_body['generation'])
-#print(f"Generated Text: {response['generation']}")
-#print(f"Prompt Token count:  {response['prompt_token_count']}")
-
