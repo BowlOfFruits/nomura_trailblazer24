@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import { Button, Modal, DatePicker, Select, Form, Input, InputNumber, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import usePortfolioStore from '../context/portfolioStore';
 
 const { Option } = Select;
 
 const AddPurchase = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const portfolioStore = usePortfolioStore();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -45,6 +47,7 @@ const AddPurchase = () => {
 
   const onFinish = async (values) => {
     // Handle form submission
+    portfolioStore.addStock(values);
     console.log('Form values:', values);
     message.success('Form submitted successfully!');
     form.resetFields();

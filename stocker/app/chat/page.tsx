@@ -36,11 +36,6 @@ const ChatMessage = ({isLastMessage, message}: ChatMessageProps) => {
 			'chat__block--sender'} ${user === 'StockerAI' && 'chat__block--bot'}`}
 		>
 		<div className="message__block">
-			{/* {user.firstName && user.lastName ? (
-				user.firstName.charAt(0) + user.lastName.charAt(0)
-			) : (
-				<PersonIcon />
-			)} */}
 			<div className="chat__message">
 				{
 					isLoading 

@@ -10,9 +10,9 @@ const Footer = () => {
     const router = useRouter();
 
     return (
-        <AntdFooter style={{ position: "fixed", bottom: 0, width: "100%", textAlign: 'right'}}>
+        <div style={{ position: "fixed", bottom: 20, right: 20, width: "100%", textAlign: 'right'}}>
             <Button><WechatOutlined onClick={() => router.push("/chat")} /></Button>
-        </AntdFooter>
+        </div>
     );
 }
 

@@ -4,7 +4,7 @@
 .chat__body {
 	overflow-y: scroll;
 	background-color: #001529;
-	height: 60vh;
+	height: 70vh;
 }
 .chat__main {
 	padding: 0 1rem 1.75rem;

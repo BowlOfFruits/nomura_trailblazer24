@@ -11,7 +11,7 @@ const Footer = () => {
     const router = useRouter();
 
     return (
-        <AntdFooter style={{ position: "fixed", bottom: 0, width: "100%", textAlign: 'right', alignContent: "end", flexDirection: 'column-reverse'}}>
+        <div style={{ position: "fixed", bottom: 20, right: 20, width: "100%", textAlign: 'right', alignContent: "end", flexDirection: 'column-reverse'}}>
             <Row justify="end">
                 <Col>
                     <AddPurchase />
@@ -20,7 +20,7 @@ const Footer = () => {
                     <Button className="mx-1"><WechatOutlined onClick={() => router.push("/chat")} /></Button>
                 </Col>
             </Row>
-        </AntdFooter>
+        </div>
     );
 }
 

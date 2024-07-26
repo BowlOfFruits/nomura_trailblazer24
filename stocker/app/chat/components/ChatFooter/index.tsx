@@ -7,7 +7,7 @@ import { Button } from 'antd';
 
 export interface ChatFooterProps {
 	roomCode: string;
-	loggedInUser: User;
+	loggedInUser: string;
 	addNewMessage: (msg: MessagePopulated) => void 
 }
 
