@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 from kb_rag import get_llm_response
+from timeseries import get_stock_prediction
 
 app = Flask(__name__)
 
@@ -21,6 +22,25 @@ def handle_query():
         response = {
             "status": "success",
             "message": llm_advice
+        }
+        return jsonify(response), 200
+    else:
+        response = {
+            "status": "fail",
+            "message": "Request body must be JSON"
+        }
+        return jsonify(response), 400
+    
+
+@app.route("/api/stock/", methods=["GET"])
+def handle_query():
+    ticker = request.get_json('ticker', None)
+    if ticker:
+        prediction = get_stock_prediction(ticker)
+        # Create a response
+        response = {
+            "status": "success",
+            "message": prediction
         }
         return jsonify(response), 200
     else:
