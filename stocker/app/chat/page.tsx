@@ -62,7 +62,7 @@ const Chat = ({ user }: ChatProps) => {
 		createdAt: new Date(), 
 		user: "StockerAI",
 		getContent: new Promise((resolve, reject) => 
-			resolve("Hello! This is StockerAI, your friendly neighbour trade recommender."))
+			resolve("Hello! This is StockerAI, your friendly neighbourhood trade recommender."))
 	}
 	] as MessagePopulated[]);
 

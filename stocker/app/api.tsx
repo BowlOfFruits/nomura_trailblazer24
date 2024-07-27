@@ -13,7 +13,6 @@ const generateFakeHistorialData = (length: number) => {
 const pingStocker = (query: string, riskTolerance: string, investmentHorizon: string, currentPortfolio: string[], preferredSectors: string[]) => {
     return fetch(be_url + "/stocker/chat", {
         method: "POST",
-        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },

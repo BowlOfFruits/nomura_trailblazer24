@@ -12,7 +12,8 @@ interface PortfolioStore {
 }
 
 const usePortfolioStore = create<PortfolioStore>((set) => ({
-    stocks: [{stockName: "AAPL", volume: 100, priceBought: 10}],
+    stocks: [{stockName: "AAPL", volume: 100, priceBought: 10},
+    ],
     addStock: (stock: PortfolioStock) => set((state) => ({ stocks: [...state.stocks, stock]}))
 }))
 

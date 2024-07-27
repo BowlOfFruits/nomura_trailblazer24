@@ -2,10 +2,8 @@
 
 import react, { useEffect, useState } from "react"
 import StockCard from "../components/StockCard";
-import { getApi } from "../api";
 import { Col, Row, Spin } from "antd";
 import PortFolioBreakdown from "../components/PortfolioBreakdown";
-import AddPurchase from "./AddPurchase";
 import usePortfolioStore from "../context/portfolioStore";
 
 interface PortfolioStock {
