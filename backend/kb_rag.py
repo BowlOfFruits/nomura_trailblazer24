@@ -1,9 +1,10 @@
-import boto3
+import os
 import json
 
-KB_ID = "6R8TDE7AER"
-REGION = "us-east-1"
-MODEL = "anthropic.claude-3-haiku-20240307-v1:0"
+langsmith_api = "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"
+
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = langsmith_api
 
 # From the frontend client profile settings
 client_profile = {

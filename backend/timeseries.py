@@ -34,5 +34,5 @@ def get_historical(ticker):
 
     return convert(json.loads(hist2.to_json()))
 
-print(get_stock_prediction("AAPL"))
+#print(get_stock_prediction("AAPL"))
 #print(get_historical("AAPL"))
