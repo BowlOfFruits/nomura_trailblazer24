@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request
-from kb_rag import get_llm_response
+from vectorDB import get_llm_response
 from flask_cors import CORS
 from timeseries import get_stock_prediction, get_historical
 import json

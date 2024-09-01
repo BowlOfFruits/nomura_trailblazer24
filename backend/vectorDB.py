@@ -20,7 +20,7 @@ vector_store = Chroma(
 for file in tqdm(os.listdir("pdf_outputs"), "Processing pdfs"):
     loader = PyPDFLoader(f"pdf_outputs/{file}") # Load
     pages = loader.load()
-
+    
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50) # Chunk
     splits = text_splitter.split_documents(pages)
 
