@@ -163,5 +163,5 @@ cython_debug/
 
 chat-frontend/** */
 
-#enviroment variables
-.env
+# langchain chroma db
+backend/chroma_langchain_db/
